@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import ClearButton from './components/ClearButton';
-import Digits from './components/Digits';
-import Operators from './components/Operators';
-import Screen from './components/Screen';
-import { isOverMaxLength } from './validator/index';
+import React, { Component } from "react";
+import ClearButton from "./components/ClearButton";
+import Digits from "./components/Digits";
+import Operators from "./components/Operators";
+import Screen from "./components/Screen";
+import { isOverMaxLength } from "./validator/index";
 
 export default class Calculator extends Component {
   constructor() {
     super();
-    const screenNumber = Number(localStorage.getItem('calculator-data'));
+    const screenNumber = Number(localStorage.getItem("calculator-data"));
     this.state = { screenNumber, recordNumber: 0, isNumberStep: true };
   }
 
   componentDidUpdate() {
     if (this.state.screenNumber === 0) {
-      localStorage.setItem('calculator-data', JSON.stringify(0));
+      localStorage.setItem("calculator-data", JSON.stringify(0));
       this.removeBeforeUnloadEvent();
       return;
     }
@@ -47,19 +47,21 @@ export default class Calculator extends Component {
 
   handleBeforeUnload = (e) => {
     e.preventDefault();
-    localStorage.setItem(
-      'calculator-data',
-      JSON.stringify(this.state.screenNumber)
-    );
-    e.returnValue = '';
+    if (isFinite(this.state.screenNumber)) {
+      localStorage.setItem(
+        "calculator-data",
+        JSON.stringify(this.state.screenNumber)
+      );
+    }
+    e.returnValue = "";
   };
 
-  addBeforeUnloadEvent = (e) => {
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  addBeforeUnloadEvent = () => {
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
   };
 
-  removeBeforeUnloadEvent = (e) => {
-    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+  removeBeforeUnloadEvent = () => {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
   };
 
   render() {
